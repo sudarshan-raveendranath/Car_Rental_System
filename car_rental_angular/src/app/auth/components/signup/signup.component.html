@@ -54,7 +54,7 @@
                         </nz-form-control>
                     </nz-form-item>
 
-                    <button nz-button class="login-form-button login-form-margin" [nzType]="'primary'" (click)="register">Register</button>
+                    <button nz-button class="login-form-button login-form-margin" [nzType]="'primary'" (click)="register()" [disabled]="signupForm.invalid">Register</button>
                     Or <a routerLink="/login">Login Now!</a>
                 </form>
             </div>
