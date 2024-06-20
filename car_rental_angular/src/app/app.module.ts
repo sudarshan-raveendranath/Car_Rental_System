@@ -13,6 +13,12 @@ import { FormsModule } from '@angular/forms';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideHttpClient } from '@angular/common/http';
 
+import {NzSpinModule} from 'ng-zorro-antd/spin';
+import {NzButtonModule} from 'ng-zorro-antd/button';
+import {NzFormModule} from 'ng-zorro-antd/form';
+import {NzInputModule} from 'ng-zorro-antd/input';
+import {NzLayoutModule} from 'ng-zorro-antd/layout';
+
 registerLocaleData(en);
 
 @NgModule({
@@ -24,7 +30,13 @@ registerLocaleData(en);
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+
+    NzSpinModule,
+    NzButtonModule,
+    NzFormModule,
+    NzInputModule,
+    NzLayoutModule
   ],
   providers: [
     provideClientHydration(),
