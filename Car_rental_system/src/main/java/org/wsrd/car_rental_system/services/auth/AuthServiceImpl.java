@@ -1,5 +1,6 @@
 package org.wsrd.car_rental_system.services.auth;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,20 @@ import org.wsrd.car_rental_system.repository.UserRepository;
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
+
+    @PostConstruct
+    public void createAdminAccount() {
+        User adminAccount = userRepository.findByUserRole(UserRole.ADMIN);
+        if (adminAccount == null) {
+            User newAdminAccount = new User();
+            newAdminAccount.setName("admin");
+            newAdminAccount.setEmail("admin@test.com");
+            newAdminAccount.setPassword(new BCryptPasswordEncoder().encode("admin"));
+            newAdminAccount.setUserRole(UserRole.ADMIN);
+            userRepository.save(newAdminAccount);
+            System.out.println("Admin account created");
+        }
+    }
 
     @Override
     public UserDto createCustomer(SignupRequest signupRequest) {
