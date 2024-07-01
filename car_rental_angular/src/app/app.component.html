@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="!isAdminLoggedIn && !isCustomerLoggedIn">
   <nz-header  class="custom-navbar">
     <div class="navbar-title">
       <a routerLink="/login">Car Rental Service</a>
@@ -9,4 +9,28 @@
     </div>
   </nz-header>
 </div>
+<div *ngIf="isAdminLoggedIn">
+  <nz-header  class="custom-navbar">
+    <div class="navbar-title">
+      <a routerLink="/login">LoggedIn Admin</a>
+    </div>
+    <div class="nav-links">
+      <a nz-button nzType="link" routerLink="/admin/dashboard" routerLinkActive="active">Dashboard</a>
+      <a nz-button nzType="link" routerLink="/admin/car" routerLinkActive="active">Post Car</a>
+      <a nz-button nzType="link"  routerLinkActive="active" (click)="logout()">Logout</a>
+    </div>
+  </nz-header>
+</div>
+<div *ngIf="isCustomerLoggedIn">
+  <nz-header  class="custom-navbar">
+    <div class="navbar-title">
+      <a routerLink="/login">LoggedIn Customer</a>
+    </div>
+    <div class="nav-links">
+      <a nz-button nzType="link" routerLink="/customer/dashboard" routerLinkActive="active">Dashboard</a>
+      <a nz-button nzType="link"  routerLinkActive="active" (click)="logout()">Logout</a>
+    </div>
+  </nz-header>
+</div>
+
 <router-outlet></router-outlet>

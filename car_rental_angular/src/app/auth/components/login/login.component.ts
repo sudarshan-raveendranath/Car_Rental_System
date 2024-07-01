@@ -8,7 +8,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
 
@@ -18,7 +18,8 @@ export class LoginComponent {
   constructor(private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private message:NzMessageService 
+    private storageService: StorageService, // Inject StorageService
+    private message: NzMessageService
   ) { }
 
   ngOnInit() {
@@ -32,16 +33,16 @@ export class LoginComponent {
     console.log(this.loginForm.value);
     this.authService.login(this.loginForm.value).subscribe((res) => {
       console.log(res);
-      if(res.userId != null) {
+      if (res.userId != null) {
         const user = {
           id: res.userId,
           role: res.userRole
         }
-        StorageService.saveUser(user);
-        StorageService.saveToken(res.jwt);
-        if(StorageService.isAdminLoggedIn()) {
+        this.storageService.saveUser(user); // Use instance method
+        this.storageService.saveToken(res.jwt); // Use instance method
+        if (this.storageService.isAdminLoggedIn()) { // Use instance method
           this.router.navigateByUrl("/admin/dashboard");
-        } else if(StorageService.isCustomerLoggedIn()) {
+        } else if (this.storageService.isCustomerLoggedIn()) { // Use instance method
           this.router.navigateByUrl("/customer/dashboard");
         } else {
           this.message.error("Bad credentials", { nzDuration: 3000 });
