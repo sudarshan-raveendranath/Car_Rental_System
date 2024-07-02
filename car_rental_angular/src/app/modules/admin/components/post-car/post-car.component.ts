@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-post-car',
@@ -7,6 +8,7 @@ import { Component } from '@angular/core';
 })
 export class PostCarComponent {
 
+  postCarForm!: FormGroup;
   isSpinning: boolean = false;
   selectedFile: File | null;
   imagePreview: string | ArrayBuffer | null;
@@ -16,8 +18,47 @@ export class PostCarComponent {
   listOfColor = ["Red","Blue","Black","White","Silver","Grey","Orange","Purple","Brown","Pink"];
   listOfTransmission = ["Automatic","Manual"];
 
-  onFileSelected($event: any) {
-    
+  constructor(private fb: FormBuilder) {}
+
+  ngOnInit() {
+    this.postCarForm = this.fb.group({
+      brand: [null, Validators.required],
+      name: [null, Validators.required],
+      type: [null, Validators.required],
+      color: [null, Validators.required],
+      transmission: [null, Validators.required],
+      year: [null, Validators.required],
+      price: [null, Validators.required],
+      description: [null, Validators.required],
+    });
+  }
+
+  postCar() {
+    console.log(this.postCarForm.value);
+    const formData: FormData = new FormData();
+    formData.append('img', this.selectedFile);
+    formData.append('brand', this.postCarForm.get('brand').value);
+    formData.append('name', this.postCarForm.get('name').value);
+    formData.append('type', this.postCarForm.get('type').value);
+    formData.append('color', this.postCarForm.get('color').value);
+    formData.append('transmission', this.postCarForm.get('transmission').value);
+    formData.append('year', this.postCarForm.get('year').value);
+    formData.append('price', this.postCarForm.get('price').value);
+    formData.append('description', this.postCarForm.get('description').value);
+    console.log(formData);
+  }
+
+  onFileSelected(event: any) {
+    this.selectedFile = event.target.files[0];
+    this.previewImage();
+  }
+
+  previewImage() {
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreview = reader.result;
+    };
+    reader.readAsDataURL(this.selectedFile);
   }
 
 }
