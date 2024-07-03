@@ -12,10 +12,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.wsrd.car_rental_system.services.jwt.UserService;
 import org.wsrd.car_rental_system.utils.JWTUtil;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 
@@ -34,20 +34,30 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String jwt;
         final String userEmail;
         if (StringUtils.isEmpty(authHeader) || !authHeader.startsWith("Bearer ")) {
+            System.out.println("Authorization header is missing or does not start with Bearer");
             filterChain.doFilter(request, response);
             return;
         }
         jwt = authHeader.substring(7);
         userEmail = jwtUtil.extractUsername(jwt);
+        System.out.println("Extracted userEmail: " + userEmail);
+
         if (StringUtils.isEmpty(userEmail) && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userService.userDetailsService().loadUserByUsername(userEmail);
+            System.out.println("Loaded userDetails: " + userDetails);
+
             if (jwtUtil.isTokenValid(jwt, userDetails)) {
                 SecurityContext context = SecurityContextHolder.createEmptyContext();
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 context.setAuthentication(authToken);
                 SecurityContextHolder.setContext(context);
+                System.out.println("User authenticated successfully");
+            } else {
+                System.out.println("JWT token is invalid");
             }
+        } else {
+            System.out.println("UserEmail is null or context already contains authentication");
         }
         filterChain.doFilter(request, response);
     }

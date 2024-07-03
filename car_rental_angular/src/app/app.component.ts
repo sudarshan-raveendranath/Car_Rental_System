@@ -20,7 +20,7 @@ export class AppComponent {
 
     // Subscribe to router events to update login status on navigation
     this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
+      if (event.constructor.name === "NavigationEnd") {
         this.updateLoginStatus();
       }
     });

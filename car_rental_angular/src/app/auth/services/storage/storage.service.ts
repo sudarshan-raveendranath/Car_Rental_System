@@ -33,7 +33,9 @@ export class StorageService {
   }
 
   getToken() {
-    return this.isBrowser() ? window.localStorage.getItem(TOKEN) : null;
+    const token = this.isBrowser() ? window.localStorage.getItem(TOKEN) : null;
+    console.log('Retrieving token:', token);
+    return token;
   }
 
   getUser() {
